@@ -1,6 +1,7 @@
 import { galleryItems } from './gallery-items.js';
 
 const galleryList = document.querySelector('.gallery');
+let instance;
 
 const galleryMarkup = galleryItems.map((item) => {
 	return `
@@ -26,15 +27,18 @@ function onPictureClick(e) {
 		return;
 	}
 
-	const instance = basicLightbox.create(`
-    <img src="${e.target.dataset.source}" width="800" height="600">`);
+	instance = basicLightbox.create(
+		`<img src="${e.target.dataset.source}" width="800" height="600">`
+	);
 	instance.show();
 
-	galleryList.addEventListener('keydown', onEscBtnPress);
+	window.addEventListener('keydown', onEscBtnPress);
+}
 
-	function onEscBtnPress(e) {
-		if (e.code === 'Escape') {
-			instance.close();
-		}
+function onEscBtnPress(e) {
+	if (e.code === 'Escape') {
+		instance.close();
+		window.removeEventListener('keydown', onEscBtnPress);
 	}
+	return;
 }
